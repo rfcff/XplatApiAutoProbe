@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Xprobe Thunder Demo</string>
+    <string name="title_main">thunder 简易测试</string>
+    <string name="rpc_status_online">RPC :9000</string>
+
+    <string name="label_local_video">本地预览</string>
+    <string name="label_remote_video">远端视频</string>
+
+    <string name="hint_app_id">AppId</string>
+    <string name="hint_scene_id">SceneId</string>
+    <string name="hint_room">房间名</string>
+    <string name="hint_uid">Uid</string>
+
+    <string name="default_app_id">10034</string>
+    <string name="default_scene_id">0</string>
+    <string name="default_room">82552971</string>
+    <string name="default_uid">123456789</string>
+
+    <string name="btn_init">初始化 SDK</string>
+    <string name="btn_destroy">销毁 SDK</string>
+    <string name="btn_join">进频道</string>
+    <string name="btn_leave">退频道</string>
+    <string name="btn_camera_on">摄像头开</string>
+    <string name="btn_camera_off">摄像头关</string>
+    <string name="btn_sub_audio_on">订阅音频</string>
+    <string name="btn_sub_audio_off">退订音频</string>
+    <string name="btn_sub_video_on">订阅视频</string>
+    <string name="btn_sub_video_off">退订视频</string>
+</resources>

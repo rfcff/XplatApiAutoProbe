@@ -1,0 +1,80 @@
+# 构建产物与中间目录（任意层级）
+build/
+**/build/
+cmake-build-*/
+out/
+dist/
+_deps/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+*.ninja
+.ninja_deps
+.ninja_log
+
+# C / C++ 目标与中间文件
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.pdb
+*.ilk
+*.idb
+*.dSYM/
+*.app/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+
+# Android / Gradle
+.gradle/
+**/.gradle/
+.idea/
+*.iml
+local.properties
+.externalNativeBuild
+.cxx
+**/captures/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# iOS / macOS
+.DS_Store
+xcuserdata/
+*.xcuserdatad/
+DerivedData/
+Pods/
+Podfile.lock
+*.xcworkspace
+!default.xcworkspace
+
+# 编辑器 / IDE
+.vscode/
+.vs/
+*.swp
+*~
+
+# 测试 / 覆盖率
+coverage/
+*.gcda
+*.gcno
+*.gcov
+
+# 本地参考克隆（可选）
+.refs/
+
+# Cursor / 本地 agent 缓存（不入库）
+.cursor/
+.workbuddy/

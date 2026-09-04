@@ -1,0 +1,5 @@
+// 顶层构建文件：统一声明子模块使用的插件版本
+// AGP 8.x 需要 Gradle 8.7 及以上版本
+plugins {
+    id 'com.android.library' version '8.5.2' apply false
+}

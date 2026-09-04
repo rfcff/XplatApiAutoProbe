@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="md_primary">#FF3F51B5</color>
+    <color name="md_primary_container">#FFDDE1FF</color>
+    <color name="ic_launcher_background">#FF3F51B5</color>
+</resources>

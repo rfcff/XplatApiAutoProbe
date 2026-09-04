@@ -1,0 +1,33 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        maven { url "https://nexus-android.duowan.com/nexus/content/groups/public" }
+        maven { url "https://nexus-android.duowan.com/nexus/content/repositories/releases" }
+        maven { url "https://nexus-android.duowan.com/nexus/content/repositories/snapshots" }
+        maven { url "https://nexus-android.duowan.com/nexus/content/repositories/thirdparty" }
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        mavenLocal()
+        maven { url "https://nexus-android.duowan.com/nexus/content/groups/public" }
+        maven { url "https://nexus-android.duowan.com/nexus/content/repositories/releases" }
+        maven { url "https://nexus-android.duowan.com/nexus/content/repositories/snapshots" }
+        maven { url "https://nexus-android.duowan.com/nexus/content/repositories/thirdparty" }
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "XplatApiAutoProbeDemo"
+include ':app'
+
+// 直接引用 XplatApiAutoProbe 工程的 Android 库模块（统一 RPC 探针）
+// settingsDir = <repo>/demo/android，库模块位于 <repo>/android/xprobe
+include ':xprobe'
+project(':xprobe').projectDir = new File(settingsDir, '../../android/xprobe')
