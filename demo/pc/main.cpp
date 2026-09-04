@@ -1,7 +1,7 @@
 // =====================================================================
 // demo/pc/main.cpp
 // XplatApiAutoProbe PC 测试工程：与 Android demo 测试面对齐（ver=2 RPC +
-// RtcManager 模拟器 + 可选 Dear ImGui UI / --headless CI 模式）。
+// RtcManager 模拟器 + 可选 Win32 UI / --headless CI 模式）。
 // =====================================================================
 #include <atomic>
 #include <chrono>
@@ -9,8 +9,19 @@
 #include <csignal>
 #include <cstdio>
 #include <cstring>
+#include <ctime>
 #include <string>
 #include <thread>
+
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#endif
 
 #include "rpc/DemoInvocation.h"
 #include "rtc/RtcManager.h"
@@ -61,9 +72,45 @@ static bool isHeadlessMode(int argc, char** argv) {
             return true;
         }
     }
+#ifdef _WIN32
+    char* env = nullptr;
+    size_t envLen = 0;
+    if (_dupenv_s(&env, &envLen, "XPROBE_PC_HEADLESS") == 0 && env != nullptr) {
+        const bool headless = (env[0] == '1' && env[1] == '\0');
+        free(env);
+        return headless;
+    }
+    return false;
+#else
     const char* env = std::getenv("XPROBE_PC_HEADLESS");
     return env != nullptr && env[0] == '1' && env[1] == '\0';
+#endif
 }
+
+#ifdef _WIN32
+// UI 构建为 WINDOWS 子系统：默认无控制台。headless / 从终端启动时再挂接或分配控制台，
+// 并设为 UTF-8，避免中文 printf 乱码。
+static void setupWindowsConsoleIfNeeded(bool headless) {
+#if defined(XPROBE_PC_UI) && XPROBE_PC_UI
+    if (!headless) {
+        return;
+    }
+    if (!::AttachConsole(ATTACH_PARENT_PROCESS)) {
+        if (!::AllocConsole()) {
+            return;
+        }
+    }
+    FILE* fp = nullptr;
+    freopen_s(&fp, "CONOUT$", "w", stdout);
+    freopen_s(&fp, "CONOUT$", "w", stderr);
+    freopen_s(&fp, "CONIN$", "r", stdin);
+#else
+    (void)headless;
+#endif
+    ::SetConsoleOutputCP(CP_UTF8);
+    ::SetConsoleCP(CP_UTF8);
+}
+#endif
 
 static void runHeadlessWaitLoop() {
     while (gRunning.load()) {
@@ -74,13 +121,17 @@ static void runHeadlessWaitLoop() {
 int main(int argc, char** argv) {
     const bool headless = isHeadlessMode(argc, argv);
 
+#ifdef _WIN32
+    setupWindowsConsoleIfNeeded(headless);
+#endif
+
     std::printf("==== XplatApiAutoProbe PC demo ====\n");
     std::printf("RPC 监听 0.0.0.0:9000");
 #if defined(XPROBE_PC_UI) && XPROBE_PC_UI
     if (headless) {
         std::printf("（headless 模式，按 Ctrl+C 退出）\n");
     } else {
-        std::printf("（ImGui UI）\n");
+        std::printf("（Win32 UI）\n");
     }
 #else
     std::printf("（无 UI 构建，按 Ctrl+C 退出）\n");
@@ -109,6 +160,9 @@ int main(int argc, char** argv) {
 #endif
 
     std::printf("[demo] 正在停止服务...\n");
+    RtcManager::getInstance().setUiLogger(nullptr);
+    RtcManager::getInstance().setAutoTestMgr(nullptr);
+    RtcManager::getInstance().shutdown();
     mgr.stop();
     std::printf("[demo] 已退出\n");
     return 0;

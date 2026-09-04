@@ -292,13 +292,16 @@ int main() {
 构建与测试：
 
 ```bash
-# PC 测试工程
-cmake -S demo/pc -B demo/pc/build && cmake --build demo/pc/build
-./demo/pc/build/xprobe_demo           # 启动宿主服务
+# PC 测试工程（推荐 x64，使用 third_party/thunderbolt）
+cmake -S demo/pc -B demo/pc/build -A x64
+cmake --build demo/pc/build --config Debug
+./demo/pc/build/Debug/xprobe_demo.exe           # 启动宿主服务（Win32 UI）
+./demo/pc/build/Debug/xprobe_demo.exe --headless
 ```
 
-其中 `demo/pc` 通过 `add_subdirectory` 复用 `core` 的核心库。Android 与 iOS 测试工程见
-[demo/README.md](demo/README.md)。
+其中 `demo/pc` 通过 `add_subdirectory` 复用 `core` 的核心库；Thunderbolt 3.5.10 SDK
+见 [`demo/pc/third_party/thunderbolt`](demo/pc/third_party/thunderbolt)。Android 与 iOS
+测试工程见 [demo/README.md](demo/README.md)。
 
 ### Android
 

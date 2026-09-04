@@ -15,6 +15,12 @@
 #ifndef FD_SETSIZE
 #define FD_SETSIZE 4096
 #endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #endif
 
 #include <atomic>

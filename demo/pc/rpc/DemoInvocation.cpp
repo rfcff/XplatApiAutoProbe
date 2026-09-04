@@ -62,7 +62,10 @@ void DemoInvocation::dispatch(const std::string& api, const xprobe::JsonValue& p
         long cost = rtc.initialize(appId, sceneId);
         mgr_->sendReturn(api, std::to_string(cost));
     } else if (api == "destroyEngine") {
-        rtc.deInitialize();
+        if (rtc.isPreviewOn()) {
+            rtc.stopLocalPreview();
+        }
+        rtc.shutdown();
         mgr_->sendReturn(api, "0");
     } else if (api == "joinRoom") {
         std::string room = strParam(params, "roomName", "82552971");
@@ -89,6 +92,25 @@ void DemoInvocation::dispatch(const std::string& api, const xprobe::JsonValue& p
     } else if (api == "stopLocalPreview") {
         int ret = rtc.stopLocalPreview();
         mgr_->sendReturn(api, std::to_string(ret));
+    } else if (api == "enumCameras" || api == "enumVideoDevices") {
+        const auto devices = rtc.enumCameras();
+        std::string out = "[";
+        for (size_t i = 0; i < devices.size(); ++i) {
+            if (i > 0) {
+                out += ",";
+            }
+            out += "{\"index\":" + std::to_string(devices[i].index) + ",\"name\":\""
+                   + devices[i].name + "\"}";
+        }
+        out += "]";
+        mgr_->sendReturn(api, out);
+    } else if (api == "selectCamera" || api == "startVideoDeviceCapture") {
+        const int index = static_cast<int>(lngParam(params, "index", -1));
+        int ret = -1;
+        if (index >= 0) {
+            ret = rtc.selectCamera(index);
+        }
+        mgr_->sendReturn(api, std::to_string(ret));
     } else if (api == "setupRemoteVideo") {
         std::string uid = strParam(params, "uid", rtc.getRemoteUid());
         int ret = rtc.setupRemoteVideo(uid);
@@ -104,7 +126,7 @@ void DemoInvocation::dispatch(const std::string& api, const xprobe::JsonValue& p
     } else if (api == "scheduleCallback") {
         std::string name = strParam(params, "name", "onProbeCallback");
         std::string info = strParam(params, "info", "ok");
-        long delayMs = lngParam(params, "delayMs", 200);
+        const int64_t delayMs = lngParam(params, "delayMs", 200);
         mgr_->sendReturn(api, "0");
         xprobe::AutoTestMgr* mgr = mgr_;
         std::thread([mgr, name, info, delayMs]() {

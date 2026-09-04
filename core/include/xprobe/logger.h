@@ -14,6 +14,15 @@
 
 namespace xprobe {
 
+// Windows wingdi.h 等会定义 ERROR（乃至 DEBUG）宏；必须在声明枚举前取消，
+// 否则 `ERROR = 4` / `LogLevel::ERROR` 会被展开成非法语法。
+#ifdef ERROR
+#undef ERROR
+#endif
+#ifdef DEBUG
+#undef DEBUG
+#endif
+
 // 日志级别常量（三端对齐）
 namespace LogLevel {
 enum {
